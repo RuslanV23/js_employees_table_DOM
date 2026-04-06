@@ -82,9 +82,8 @@ class MyTable {
         return;
       }
 
-      if (this.editingCell !== selectedCell) {
-        this.editingCell?.blur();
-        this.editingCell = selectedCell;
+      if (!selectedCell || this.editingCell) {
+        return;
       }
 
       const input = document.createElement('input');
@@ -103,6 +102,7 @@ class MyTable {
       input.classList.add('cell-input');
       selectedCell.append(input);
       input.focus();
+      this.editingCell = selectedCell;
 
       input.addEventListener('blur', (e2) => {
         const inputValue = input.value;
