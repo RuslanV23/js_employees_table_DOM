@@ -11,6 +11,7 @@ class MyTable {
 
     this.actionHead = null;
     this.actionBodyRow = null;
+    this.editingCell = null;
     this.startEvents();
 
     [...this.tHead.rows[0].cells].forEach((elem) => {
@@ -48,7 +49,7 @@ class MyTable {
     this.actionHead = newValue;
 
     if (oldValue === newValue) {
-      sortOrder = newValue.dataset.sortOrder === 'ASC' ? 'DECS' : 'ASC';
+      sortOrder = newValue.dataset.sortOrder === 'ASC' ? 'DESC' : 'ASC';
     }
 
     newValue.dataset.sortOrder = sortOrder;
@@ -77,6 +78,15 @@ class MyTable {
        */
       const selectedCell = e.target.closest('td');
 
+      if (!e) {
+        return;
+      }
+
+      if (this.editingCell !== selectedCell) {
+        this.editingCell?.blur();
+        this.editingCell = selectedCell;
+      }
+
       const input = document.createElement('input');
 
       const originalInput = selectedCell.textContent;
@@ -98,6 +108,7 @@ class MyTable {
         const inputValue = input.value;
 
         input.remove();
+        this.editingCell = null;
 
         if (inputValue === '') {
           selectedCell.textContent = originalInput;
